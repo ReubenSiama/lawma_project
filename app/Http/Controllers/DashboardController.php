@@ -8,6 +8,7 @@ use Auth;
 use App\User;
 use App\Item;
 use App\role;
+use App\Invoice;
 class DashboardController extends Controller
 {   
     public function postlogin(Request $request)
@@ -67,7 +68,7 @@ class DashboardController extends Controller
             $item->image = $base64;
         }
         $item->price = $request->price;
-        $item->quantity = $request->quantity;
+        $item->quantity = $item->quantity + $request->quantity;
         if($item->save()){
             return back()->with('Success','Item Updated Successfully');
         }else{
@@ -76,8 +77,29 @@ class DashboardController extends Controller
     }
     public function getSales()
     {
-        $items = Item::all();
-        return view('sales',['items'=>$items]);
+        $invoices = Invoice::orderBy('created_at','DESC')->get();
+        $myItem = Item::all();
+        $statsW = array();
+        $statsY = array();
+        $items = array();
+        $items2 = array();
+        $today = date('Y-m-d');
+        $previous_week = date('Y-m-d',strtotime('-6 days'));
+        foreach($invoices as $invoice){
+            if(!in_array($invoice->item_name,$items)){
+                $count = Invoice::where('item_name',$invoice->item_name)->where('invoice_date','>=',$previous_week)->where('invoice_date','<=',$today)->count();
+                array_push($statsW,['item'=>$invoice->item_name,'count'=>$count]);
+            }
+            array_push($items,$invoice->item_name);
+        }
+        foreach($invoices as $invoice){
+            if(!in_array($invoice->item_name,$items2)){
+                $count = Invoice::where('item_name',$invoice->item_name)->count();
+                array_push($statsY,['item'=>$invoice->item_name,'count'=>$count]);
+            }
+            array_push($items2,$invoice->item_name);
+        }
+        return view('sales',['invoices'=>$invoices,'week_sales'=>$statsW,'all_sales'=>$statsY]);
     }
     public function getEmployees()
     {
@@ -113,28 +135,31 @@ class DashboardController extends Controller
     }
     public function generateInvoice(Request $request)
     {
-        $table = "";
-        $total = 0;
         $customer_name = $request->name;
-        foreach($request->item as $item){
-            $newItem = Item::find($item);
-            $total += $amount = $newItem->price * $request->qnty[$newItem->item_name];
-            $table .= "<tr>
-           
-            <td style='text-align:center'>".
-            $newItem->item_name  
-            ."</td>
-            <td style='text-align:center'>".
-                $newItem->price
-            ."</td>
-            <td style='text-align:center'>".
-                $request->qnty[$newItem->item_name]
-            ."</td>
-            <td style='text-align:center'>".
-                $amount
-            ."</td>
-            </tr>";
+        if(count($request->item) == 0){
+            return back()->with('Error','Please select item');
         }
-        return view('invoice',['items'=>$table,'total'=>$total,'customer_name'=>$customer_name]);
+        $total = 0;
+        $items = Item::whereIn('id',$request->item)->get();
+        $invoiceNumber = "ANSS".time();
+        foreach($items as $item){
+            if($item->quantity < $request->qnty[$item->item_name]){
+                return back()->with('Error','You are running out of stock on '.$item->item_name);
+            }
+        }
+        foreach($items as $item){
+            $invoice = new Invoice;
+            $invoice->invoice_no = $invoiceNumber;
+            $invoice->invoice_date = date('Y-m-d');
+            $invoice->customer_name = $customer_name;
+            $invoice->item_name = $item->item_name;
+            $invoice->price = $item->price;
+            $invoice->quantity = $request->qnty[$item->item_name];
+            $invoice->total = $request->qnty[$item->item_name] * $item->price;
+            $invoice->save();
+            $item->quantity = $item->quantity - $request->qnty[$item->item_name];
+            $item->save();
+        }
+        return view('invoice',['customer_name'=>$customer_name,'items'=>$items,'quantity'=>$request->qnty,'total'=>$total,'invoice_number'=>$invoiceNumber]);
     }
 }

@@ -3,7 +3,7 @@
 @section('content')
     <div class="col-md-8 col-md-offset-2">
         <form action="/generateInvoice">
-            {{ csrf_field() }}
+            
             <div class="panel panel-success">
                 <div class="panel-heading">
                     Item List
@@ -34,10 +34,13 @@
                     <button type="submit" class="btn btn-success">Save</button>
                 </div>
                 </div>
-                
             </div>
             </div>
-
         </form>
     </div>
+    @if(session('Error'))
+        <script>
+            swal("Error","{{ session('Error') }}","error");
+        </script>
+    @endif
 @endsection

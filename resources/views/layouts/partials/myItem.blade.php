@@ -8,9 +8,10 @@
             <div class="caption col-md-10">
                 <p>{{ $item->item_name }}</p>
                 <p>Price : ₹{{ $item->price }}</p>
+                <p>Quantity : {{ $item->quantity }}</p>
             </div>
             <input onchange="displayInput('qnty{{ $item->id }}')" type="checkbox" value="{{ $item->id }}" class="pull-right" name="item[]" id="item{{ $item->id }}">
-            <input type="text" name="qnty[{{ $item->item_name }}]" id="qnty{{ $item->id }}" class="hidden" placeholder="Quantity">
+            <input type="number" min=1 name="qnty[{{ $item->item_name }}]" id="qnty{{ $item->id }}" class="hidden" placeholder="Quantity">
         </label>
     </div>
 </div>
