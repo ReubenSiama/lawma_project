@@ -4,7 +4,7 @@
     <div class="col-md-8 col-md-offset-2" style="border-style: ridge;">
     <center>
         <h3>
-            Michale's Sweet Stall<br>
+            Ankit's Sweet Stall<br>
             <small>Contact : 2345989601</small>
         </h3>
     </center>

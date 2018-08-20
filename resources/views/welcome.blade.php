@@ -24,7 +24,7 @@
 <body>
 <div class="jumbotron">
     <center>
-        <h2>Michael's Sweet Stall</h2>
+        <h2>Ankit's Sweet Stall</h2>
     </center>
 </div>
 <div class="container-fluid">

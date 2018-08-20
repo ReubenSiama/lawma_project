@@ -1,7 +1,7 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-        <a class="navbar-brand" href="/home">Michael's Sweet Stall</a>
+        <a class="navbar-brand" href="/home">Ankit's Sweet Stall</a>
         </div>
         <ul class="nav navbar-nav">
         <li class="{{ Request::is('home') ? 'active' : '' }}"><a href="/home">Home</a></li>
