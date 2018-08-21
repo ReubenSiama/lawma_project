@@ -2,8 +2,8 @@
 @section('title','Home')
 @section('content')
     <div class="col-md-8 col-md-offset-2">
-        <form action="/generateInvoice">
-            
+        <form action="/generateInvoice" method="POST">
+            {{ csrf_field() }}
             <div class="panel panel-success">
                 <div class="panel-heading">
                     Item List
@@ -29,7 +29,9 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="item_name">Name:</label>
-                        <input type="text" name="name" class="form-control" id="name">
+                        <input type="text" name="name" class="form-control" required id="name" placeholder="Customer Name"><br>
+                        <label for="discount">Discount</label>
+                        <input type="number" name="discount" id="discount" required value="0" placeholder="Discount" min="0" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-success">Save</button>
                 </div>

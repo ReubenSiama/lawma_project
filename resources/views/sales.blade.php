@@ -1,7 +1,20 @@
 @extends('layouts.head')
 @section('title','Sales')
 @section('content')
-    <div class="col-md-8 col-md-offset-2">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="container" style="width: 550px; height: 400px; margin: 0 auto"></div>
+        </div>
+        <div class="col-md-6">
+            <div id="container2" style="width: 550px; height: 400px; margin: 0 auto"></div>
+        </div>
+    </div>
+    <hr>
+    <center>
+        <u><i><b>SALES HISTORY</b></i></u>
+    </center>
+    <br>
+    <div class="col-md-8 col-md-offset-2" style="height:500px; max-height:500px; overflow-y: scroll;">
         <table class="table table-hover">
             <thead>
                 <th>Date</th>
@@ -23,19 +36,11 @@
             </tbody>
         </table>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div id="container" style="width: 550px; height: 400px; margin: 0 auto"></div>
-        </div>
-        <div class="col-md-6">
-            <div id="container2" style="width: 550px; height: 400px; margin: 0 auto"></div>
-        </div>
-    </div>
     <script language="JavaScript">
     function drawChart() {
         // Define the chart to be drawn.
         var data = google.visualization.arrayToDataTable([
-        ['Week Sales', 'Sales Statistics'],
+        ['Week Sales', 'Sales Statistics (For a Week)'],
         @foreach($week_sales as $stats)
             ['{{ $stats["item"] }}', {{ $stats['count'] }}],
         @endforeach
@@ -55,7 +60,7 @@
     function drawChart() {
         // Define the chart to be drawn.
         var data = google.visualization.arrayToDataTable([
-        ['All Times Sales', 'Sales Statistics'],
+        ['All Times Sales', 'Sales Statistics (All Times)'],
         @foreach($all_sales as $stats)
             ['{{ $stats["item"] }}', {{ $stats['count'] }}],
         @endforeach

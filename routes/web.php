@@ -20,9 +20,9 @@ Route::get('/logout','DashboardController@postLogout');
 Route::get('/products','DashboardController@getProducts');
 Route::get('/sales','DashboardController@getSales');
 Route::get('/employees','DashboardController@getEmployees');
-Route::get('/generateInvoice','DashboardController@generateInvoice');
 
 // Post Methods
+Route::post('/generateInvoice','DashboardController@generateInvoice');
 Route::post('/login', 'DashboardController@postlogin');
 Route::post('/addProduct','DashboardController@addProducts');
 Route::post('/deleteItem','DashboardController@deleteItem');

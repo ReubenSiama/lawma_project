@@ -24,6 +24,11 @@
         .navbar{
             border-radius: 0;
         }
+        @media print {
+            .noPrint { width:50%; }
+            @page{ margin: 0; }
+            body{ margin: 1.6cm; }
+        }
     </style>
 </head>
 <body>

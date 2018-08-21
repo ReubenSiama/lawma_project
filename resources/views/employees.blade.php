@@ -42,7 +42,7 @@
                                 <label for="price">Role:</label>
                             </td>
                             <td>
-                                <select name="role" id="role" class="form-control">
+                                <select required name="role" id="role" class="form-control">
                                     <option value="">--Select--</option>
                                     @foreach($roles as $role)
                                         <option value="{{ $role->id }}">{{ $role->role }}</option>
@@ -55,7 +55,7 @@
                                 <label for="name">Name:</label>
                             </td>
                             <td>
-                                <input type="text" name="name" class="form-control" id="name">
+                                <input required type="text" name="name" class="form-control" id="name">
                             </td>
                         </tr>
                         <tr>
@@ -63,7 +63,7 @@
                                 <label for="email">Email:</label>
                             </td>
                             <td>
-                                <input type="email" name="email" class="form-control" id="email">
+                                <input required type="email" name="email" class="form-control" id="email">
                             </td>
                         </tr>
                         <tr>
@@ -71,7 +71,7 @@
                                 <label for="phNo">Phone No.:</label>
                             </td>
                             <td>
-                                <input type="number" name="phNo" class="form-control" id="phNo">
+                                <input required type="number" name="phNo" class="form-control" id="phNo">
                             </td>
                         </tr>
                         <tr>
@@ -79,7 +79,7 @@
                                 <label for="password">Password:</label>
                             </td>
                             <td>
-                                <input type="password" name="password" class="form-control" id="password">
+                                <input required type="password" name="password" class="form-control" id="password">
                             </td>
                         </tr>
                     </table>

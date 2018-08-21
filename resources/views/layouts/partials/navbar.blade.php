@@ -5,9 +5,13 @@
         </div>
         <ul class="nav navbar-nav">
         <li class="{{ Request::is('home') ? 'active' : '' }}"><a href="/home">Home</a></li>
+        @if(Auth::user()->role->role == "Admin")
         <li class="{{ Request::is('products') ? 'active' : '' }}"><a href="/products">Products</a></li>
+        @endif
         <li class="{{ Request::is('sales') ? 'active' : '' }}"><a href="/sales">Sales</a></li>
+        @if(Auth::user()->role->role == "Admin")
         <li class="{{ Request::is('employees') ? 'active' : '' }}"><a href="/employees">Employees</a></li>
+        @endif
         </ul>
         <ul class="nav navbar-nav navbar-right">
         <li><a href="/profile"><span class="glyphicon glyphicon-user"></span> {{ Auth::user()->name }}</a></li>

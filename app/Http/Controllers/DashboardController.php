@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ItemRequest;
+use App\Http\Requests\UserRequest;
 use Auth;
 use App\User;
 use App\Item;
@@ -87,14 +88,14 @@ class DashboardController extends Controller
         $previous_week = date('Y-m-d',strtotime('-6 days'));
         foreach($invoices as $invoice){
             if(!in_array($invoice->item_name,$items)){
-                $count = Invoice::where('item_name',$invoice->item_name)->where('invoice_date','>=',$previous_week)->where('invoice_date','<=',$today)->count();
+                $count = Invoice::where('item_name',$invoice->item_name)->where('invoice_date','>=',$previous_week)->where('invoice_date','<=',$today)->sum('quantity');
                 array_push($statsW,['item'=>$invoice->item_name,'count'=>$count]);
             }
             array_push($items,$invoice->item_name);
         }
         foreach($invoices as $invoice){
             if(!in_array($invoice->item_name,$items2)){
-                $count = Invoice::where('item_name',$invoice->item_name)->count();
+                $count = Invoice::where('item_name',$invoice->item_name)->sum('quantity');
                 array_push($statsY,['item'=>$invoice->item_name,'count'=>$count]);
             }
             array_push($items2,$invoice->item_name);
@@ -107,7 +108,7 @@ class DashboardController extends Controller
         $users = User::where('role_id','!=',Auth::user()->role_id)->get();
         return view('employees',['roles'=>$roles,'users'=>$users]);
     }
-    public function addEmployee(Request $request)
+    public function addEmployee(UserRequest $request)
     {
         $user = new User;
         $user->name = $request->name;
@@ -139,6 +140,9 @@ class DashboardController extends Controller
         if(count($request->item) == 0){
             return back()->with('Error','Please select item');
         }
+        if($customer_name == null){
+            return back()->with('Error','Please Enter Customer Name');
+        }
         $total = 0;
         $items = Item::whereIn('id',$request->item)->get();
         $invoiceNumber = "ANSS".time();
@@ -160,6 +164,13 @@ class DashboardController extends Controller
             $item->quantity = $item->quantity - $request->qnty[$item->item_name];
             $item->save();
         }
-        return view('invoice',['customer_name'=>$customer_name,'items'=>$items,'quantity'=>$request->qnty,'total'=>$total,'invoice_number'=>$invoiceNumber]);
+        $discount = $request->discount;
+        return $this->printInvoice($invoiceNumber,$discount);
+    }
+    public function printInvoice($invoiceNumber,$discount)
+    {
+        $invoice = Invoice::where('invoice_no',$invoiceNumber)->get();
+        $invoice2 = Invoice::where('invoice_no',$invoiceNumber)->first();
+        return view('invoice',['invoice2'=>$invoice2,'items'=>$invoice,'total'=>0,'discount'=>$discount]);
     }
 }
